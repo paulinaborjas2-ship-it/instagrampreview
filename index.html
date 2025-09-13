@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mi Preview de Instagram</title>
+  <title>Widget Instagram Preview</title>
   <style>
     body {
       font-family: sans-serif;
@@ -14,9 +14,13 @@
     h2 {
       margin-bottom: 20px;
     }
+    #uploadBtn {
+      margin-bottom: 20px;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(4, 1fr);
       gap: 8px;
       max-width: 500px;
       margin: auto;
@@ -27,37 +31,76 @@
       object-fit: cover;
       border-radius: 8px;
       box-shadow: 0 1px 6px #0002;
+      cursor: pointer;
       transition: transform 0.2s;
     }
     .grid img:hover {
       transform: scale(1.05);
     }
     input[type="file"] {
-      margin-bottom: 20px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <h2>Mi Preview de Instagram ✨</h2>
-  <input type="file" id="fileInput" multiple accept="image/*">
-  <div class="grid" id="grid"></div>
+  <h2>Instagram Preview Widget ✨</h2>
+  <button id="uploadBtn">Subir imagen</button>
+  <input type="file" id="fileInput" accept="image/*">
+  
+  <div class="grid" id="grid">
+    <!-- Aquí se mostrarán las 12 imágenes -->
+    <!-- Si no hay imagen, aparecerá un placeholder vacío -->
+  </div>
 
   <script>
-    const fileInput = document.getElementById("fileInput");
-    const grid = document.getElementById("grid");
+    const MAX_IMAGES = 12;
+    const grid = document.getElementById('grid');
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
 
-    fileInput.addEventListener("change", (event) => {
-      const files = Array.from(event.target.files);
+    // Creamos 12 placeholders
+    for (let i = 0; i < MAX_IMAGES; i++) {
+      const img = document.createElement('img');
+      img.src = '';
+      img.dataset.index = i;
+      grid.appendChild(img);
+    }
 
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = document.createElement("img");
-          img.src = e.target.result;
-          grid.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-      });
+    // Cuando se hace clic en una imagen, abre el selector de archivos
+    grid.addEventListener('click', (e) => {
+      if (e.target.tagName === 'IMG') {
+        fileInput.dataset.index = e.target.dataset.index;
+        fileInput.click();
+      }
+    });
+
+    // Botón para subir la primera imagen vacía
+    uploadBtn.addEventListener('click', () => {
+      const firstEmpty = Array.from(grid.children).find(img => !img.src);
+      if (firstEmpty) {
+        fileInput.dataset.index = firstEmpty.dataset.index;
+        fileInput.click();
+      } else {
+        alert("Ya tienes 12 imágenes subidas");
+      }
+    });
+
+    // Cuando seleccionamos un archivo
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const idx = fileInput.dataset.index;
+        grid.children[idx].src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      fileInput.value = ''; // limpiamos el input
+    });
+  </script>
+</body>
+</html>
+
     });
   </script>
 </body>
