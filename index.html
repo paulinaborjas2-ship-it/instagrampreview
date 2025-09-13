@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Preview de Instagram</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      max-width: 500px;
+      margin: auto;
+    }
+    .grid img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px #0002;
+      transition: transform 0.2s;
+    }
+    .grid img:hover {
+      transform: scale(1.05);
+    }
+    input[type="file"] {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Mi Preview de Instagram ✨</h2>
+  <input type="file" id="fileInput" multiple accept="image/*">
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const grid = document.getElementById("grid");
+
+    fileInput.addEventListener("change", (event) => {
+      const files = Array.from(event.target.files);
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          grid.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  </script>
+</body>
+</html>
