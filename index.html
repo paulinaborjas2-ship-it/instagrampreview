@@ -67,7 +67,7 @@
         if (src) {
           const img = document.createElement('img');
           img.src = src;
-          img.alt = `Imagen ${idx+1}`;
+          img.alt = `Imagen ${idx + 1}`;
           grid.appendChild(img);
         } else {
           const placeholder = document.createElement('div');
@@ -80,9 +80,8 @@
       localStorage.setItem('images', JSON.stringify(images));
     }
 
-    uploadBtn.addEventListener('click', () => {
-      fileInput.click();
-    });
+    // Botón conecta correctamente con el input
+    uploadBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', (event) => {
       const file = event.target.files[0];
@@ -100,6 +99,8 @@
         }
       };
       reader.readAsDataURL(file);
+
+      // Limpiar input para poder subir la misma imagen otra vez
       fileInput.value = '';
     });
 
