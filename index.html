@@ -80,4 +80,30 @@
       localStorage.setItem('images', JSON.stringify(images));
     }
 
-    uploadBtn.addEven
+    uploadBtn.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const firstEmpty = images.findIndex(src => !src);
+        if (firstEmpty !== -1) {
+          images[firstEmpty] = e.target.result;
+          renderGrid();
+          saveImages();
+        } else {
+          alert("Ya tienes 12 imágenes subidas");
+        }
+      };
+      reader.readAsDataURL(file);
+      fileInput.value = '';
+    });
+
+    renderGrid();
+  </script>
+</body>
+</html>
